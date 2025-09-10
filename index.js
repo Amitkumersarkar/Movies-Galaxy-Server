@@ -31,21 +31,23 @@ async function run() {
         await client.connect();
         const movieCollection = client.db("movieDB").collection("movie");
 
-        // POST to add new movie
+        // POST to add new movie (create data)
         app.post('/movie', async (req, res) => {
             try {
                 const newMovie = req.body;
                 const result = await movieCollection.insertOne(newMovie);
                 res.status(201).send(result);
+                console.log(newMovie);
             } catch (err) {
                 res.status(500).send({ error: "Failed to add movie" });
             }
         });
 
-        // GET to fetch all movies
+        // GET to fetch all movies (read data)
         app.get('/movies', async (req, res) => {
-            const movies = await movieCollection.find().toArray();
-            res.send(movies);
+            const cursor = movieCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
         });
 
         await client.db("admin").command({ ping: 1 });
