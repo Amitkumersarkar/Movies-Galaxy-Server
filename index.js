@@ -29,8 +29,10 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
         await client.connect();
+        // movie database connection
         const movieCollection = client.db("movieDB").collection("movie");
-
+        // Users database connection
+        const userCollection = client.db('movieDB').collection('users');
         // CREATE - Add new movie
         app.post('/movie', async (req, res) => {
             try {
@@ -109,6 +111,20 @@ async function run() {
                 res.status(500).send({ success: false, message: "Failed to delete movie" });
             }
         });
+
+        // Users related api
+        app.post('/users', async (req, res) => {
+            const newUser = req.body;
+            console.log('creating new user info', newUser)
+            const result = await userCollection.insertOne(newUser)
+            res.send(result);
+        })
+
+        app.get('/users', async (req, res) => {
+            const cursor = userCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        })
 
         await client.db("admin").command({ ping: 1 });
         console.log("Connected to MongoDB!");
