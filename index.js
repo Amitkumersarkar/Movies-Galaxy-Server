@@ -1,7 +1,7 @@
+require('dotenv').config();
 const express = require('express');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const cors = require('cors');
-require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -126,8 +126,8 @@ async function run() {
             res.send(result);
         })
 
-        await client.db("admin").command({ ping: 1 });
-        console.log("Connected to MongoDB!");
+        // await client.db("admin").command({ ping: 1 });
+        // console.log("Connected to MongoDB!");
     } catch (error) {
         console.error(error);
     }
